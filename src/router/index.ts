@@ -1,51 +1,37 @@
-import 'nprogress/css/nprogress.css'; // 进度条样式
-import { createRouter, createWebHashHistory } from 'vue-router';
+/*
+ * @Author: JeremyJone
+ * @Date: 2021-10-12 16:00:00
+ * @LastEditors: JeremyJone
+ * @LastEditTime: 2021-10-12 16:12:45
+ * @Description: 路由配置文件
+ */
 
-import { createRouterGuards } from './router-guards';
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+import Home from '@/pages/Home.vue';
 
-import outsideLayout from './outsideLayout';
-import { whiteNameList } from './constant';
-import type { App } from 'vue';
-import type { RouteRecordRaw } from 'vue-router';
-
-export const routes: Array<RouteRecordRaw> = [
+const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'Layout',
-    redirect: '/dashboard/welcome',
-    component: () => import(/* webpackChunkName: "layout" */ '@/layout/index.vue'),
-    meta: {
-      title: '首页',
-    },
-    children: [],
+    name: 'Home',
+    component: Home,
   },
-  // Layout之外的路由
-  ...outsideLayout,
+  {
+    // 匹配全部其他内容
+    path: '/:pathMatch(.*)*',
+    component: () => import(/* webpackChunkName: "404" */ '@/pages/404.vue'),
+  },
 ];
 
-export const router = createRouter({
-  // process.env.BASE_URL
-  history: createWebHashHistory(''),
+const router = createRouter({
+  history: createWebHistory(),
   routes,
 });
 
-// reset router
-export function resetRouter() {
-  router.getRoutes().forEach((route) => {
-    const { name } = route;
-    if (name && !whiteNameList.some((n) => n === name)) {
-      router.hasRoute(name) && router.removeRoute(name);
-    }
-  });
-}
+// 路由拦截器
+router.beforeEach((to, from, next) => {
+  // TODO: 自定义拦截内容
 
-export async function setupRouter(app: App) {
-  // 创建路由守卫
-  createRouterGuards(router, whiteNameList);
+  next();
+});
 
-  app.use(router);
-
-  // 路由准备就绪后挂载APP实例
-  await router.isReady();
-}
 export default router;
