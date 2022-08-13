@@ -7,7 +7,8 @@
  */
 
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
-import Home from '@/pages/Home.vue';
+import type { App } from 'vue';
+import Home from '@/pages/home/index.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -34,4 +35,10 @@ router.beforeEach((to, from, next) => {
   next();
 });
 
+export async function setupRouter(app: App) {
+  // 创建路由守卫
+  app.use(router);
+  // 路由准备就绪后挂载APP实例
+  await router.isReady();
+}
 export default router;

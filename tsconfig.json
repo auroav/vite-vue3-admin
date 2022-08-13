@@ -21,7 +21,7 @@
     "noImplicitAny": false,
     "skipLibCheck": true,
     "removeComments": true,
-    "types": ["node", "vite/client", "unplugin-vue-define-options"],
+    "types": ["node", "vite/client", "unplugin-vue-define-options", "element-plus/global"],
     "paths": {
       "@/*": ["src/*"]
     }
